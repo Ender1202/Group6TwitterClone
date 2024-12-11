@@ -1,0 +1,648 @@
+C# Programs
+
+1) Hello World
+
+using System;
+					
+public class Program
+{
+	public static void Main()
+	{
+		Console.WriteLine("Hello Naman");
+	}
+}
+
+2) Name and City
+
+using System;
+					
+public class NameAndCity
+{
+	public static void Main()
+	{
+		string name, city ="";
+		Console.WriteLine("Enter your Name:");
+		name = Console.ReadLine();
+		Console.WriteLine("Enter your City:");
+		city = Console.ReadLine();
+		Console.WriteLine("Hello, "+ name + ", you belong to " + city + ".");
+	}
+}
+
+3) Greatest Number in 3
+
+using System;
+					
+public class GreatestNumber
+{
+	public static void Main()
+	{
+		int a, b, c = 0;
+		Console.WriteLine("Enter a number");
+		a =Convert.ToInt32(Console.ReadLine());
+		Console.WriteLine("Enter a number");
+		b = Convert.ToInt32(Console.ReadLine());
+		Console.WriteLine("Enter a number");
+		b = Convert.ToInt32(Console.ReadLine());
+		if (a>b)
+		{ if (a >c)
+		{
+			Console.WriteLine("The Greatest number is: "+ a);
+		}
+		 else
+			 Console.WriteLine("The Greatest number is: "+ c);
+		}
+		 else if (b > c)
+		 { Console.WriteLine("The Greatest number is: "+ b);
+		 }
+		  else
+			  Console.WriteLine("The Greatest number is: "+ c);
+	}
+}
+
+4) Display 10 Values
+
+using System;
+					
+public class DisplayValuesUsingFor
+{
+	public static void Main()
+	{	int i = 0;
+	 for(i = 10; i>=1;i--)
+	 { Console.WriteLine(i);
+	 }
+	}
+}
+
+5) Sum of 10 values
+
+using System;
+					
+public class SumOfValuesUsingFor
+{
+	public static void Main()
+	{	int num = 0,i = 0,sum =0;
+	 for(i=1;i<=10;i++)
+	 {
+	 Console.WriteLine("Enter a value:");
+	 num = Convert.ToInt32(Console.ReadLine());
+	 sum +=num;
+	 }
+	 Console.WriteLine("The sum is: " + sum);
+	}
+}
+
+6) Multiplication Table
+
+using System;
+					
+public class MultiplicationTable
+{
+	public static void Main()
+	{	int num=0,ctr=1;
+	 Console.WriteLine("Enter the number you want the table for:");
+	 num=Convert.ToInt32(Console.ReadLine());
+	 for(ctr=1;ctr<=12;ctr++)
+	 {Console.WriteLine(num + "x" +ctr+ " = " + num*ctr);
+	 }
+	}
+}
+
+7) Factorial
+
+using System;
+					
+public class Factorials
+{
+	public static void Main()
+	{	int num = 0,ctr=0,fact=1;
+		Console.WriteLine("Enter the number to be calculated:");
+	 	num = Convert.ToInt32(Console.ReadLine());
+		for(ctr = num; ctr >=1;ctr--)
+		{	fact *=ctr; 
+		}
+	 Console.WriteLine("The factorial is: " + fact);
+	}
+}
+
+8) Fibonacci
+
+using System;
+					
+public class Fibonacci
+{
+	public static void Main()
+	{	int f1=0,f2=1,f3=0;
+	 	int ctr=1,num=1;
+	 	Console.WriteLine("Enter the number of terms you want:");
+	 	num = Convert.ToInt32(Console.ReadLine());
+	 	num-=2;	
+	 	Console.WriteLine(f1);
+	 	Console.WriteLine(f2);
+	 for (ctr=1;ctr<=num;ctr++)
+	 {	f3=f1+f2;
+	  	Console.WriteLine(f3);
+	  	f1=f2;
+	  	f2=f3;
+	 }
+	}
+}
+
+9) Factorial using While
+
+using System;
+					
+public class FactorialsUsingWhile
+{
+	public static void Main()
+	{	int num = 0;
+	 	int fact = 1;
+	 Console.WriteLine("Enter the number:");
+	 num = Convert.ToInt32(Console.ReadLine());
+	 	int ctr = num;
+	 while (ctr>=1)
+	 {fact *= ctr;
+	  ctr-=1;
+	 }
+	 Console.WriteLine("The factorial is: " + fact);
+	}
+}
+
+10) Boxing and Unboxing
+
+using System;
+					
+public class BoxDemo
+{
+	public static void Main()
+	{	int i = 10; //value
+	 object o = 0; //object
+	 o = i; //boxing
+	 Console.WriteLine("i = " + i + " obj = " + o);
+	 int j = 0;
+	 j = (int)o; //unboxing
+	 Console.WriteLine("j = " + j);
+	}
+}
+
+11) Method
+
+using System;
+					
+public class MethodDemo
+{
+	public static void Main()
+	{	int a=7,b=10;
+	 	int c;
+	 c=addi(a,b);
+	 Console.WriteLine(c);
+	}
+	public static int addi(int x, int y)
+	{	return x + y;
+	}
+}
+
+12)Swapping
+
+using System;
+					
+public class RefDemo
+{
+	public static void Main()
+	{	int a=97;int b=45;
+	 Console.WriteLine("Before Swap: " +"a = "+ a + " & b = "+ b);
+	 Swap(ref a, ref b);
+		 Console.WriteLine("After Swap: "+ "a = " + a + " & b = " + b);
+	}
+	public static void Swap( ref int x, ref int y)
+	{	int t;
+	 	t = x;
+	 	x = y;
+	 	y = t;
+	}
+}
+
+13) Out in method
+
+using System;
+					
+public class OutDemo
+{
+	public static void Main()
+	{	int a=0, b=0;
+	 	float d;
+		Console.WriteLine("Enter 1st value:");
+	 	a = Convert.ToInt32(Console.ReadLine());
+	 	Console.WriteLine("Enter 2nd value:");
+	 	b = Convert.ToInt32(Console.ReadLine());
+	 	int c = calc(a,b, out d);
+	 	Console.WriteLine(c);
+	 	Console.WriteLine(d);
+	}
+	
+	public static int calc(int x, int y, out float z)
+	{	z = x*y;
+		return x + y;
+	}
+}
+
+
+Greatest using Array
+
+using System;
+					
+public class Program
+{
+	public static void Main()
+	{	int[] arr = new int[10];
+	 int Max = arr[0];
+		for( int i = 0;i<10;i++)
+		{	Console.WriteLine("Enter Array Value {0}",(i+1));
+			arr[i] = Convert.ToInt32(Console.ReadLine());
+		 	if (arr[i]>Max)
+				Max = arr[i];
+		}
+		Console.WriteLine("The Max value is: " + Max);
+	}
+}
+
+
+  internal class MultiDimesArray
+
+  {
+
+      static void Main(string[] args)
+
+      {
+
+          int rows = 0;
+
+          int cols = 0;
+ 
+          //Console.WriteLine("Enter number of rows :");
+
+          //rows =  Convert.ToInt32(Console.ReadLine());
+ 
+          //Console.WriteLine("Enter number of cols :");
+
+          //cols = Convert.ToInt32(Console.ReadLine());
+ 
+          int[,] arr1 = new int[rows,cols];
+ 
+          int[,] arr2 =
+
+          {
+
+              { 1, 2, 3  },
+
+              { 4, 5, 6 },
+
+              { 7, 8, 9}
+
+          };
+ 
+          Console.WriteLine( "Size of arr2    " + arr2.Length);
+ 
+          //for (int r = 0; r < rows;r++)
+
+          //{
+
+          //    for(int c = 0; c < cols;c++)
+
+          //    {
+ 
+          //        Console.WriteLine("Enter value for {0} {1}",r,c);
+
+          //        arr1[r,c] = Convert.ToInt32(Console.ReadLine());
+ 
+          //    }
+ 
+          //}
+ 
+ 
+          //for (int r = 0; r < rows; r++)
+
+          //{
+
+          //    for (int c = 0; c < cols; c++)
+
+          //    {
+ 
+          //        Console.Write(arr1[r,c]  + "\t");
+
+          //                      }
+
+          //    Console.WriteLine();
+ 
+          //}
+ 
+ 
+ 
+      }
+
+  }
+ 
+
+    internal class JaggedArray
+
+    {
+
+        static void Main(string[] args)
+
+        {
+
+            int[][] jagarray = new int[3][];
+
+            int len = 0;
+
+            int j=0;
+
+            jagarray[0] = new int[2] { 1, 2 };
+
+                jagarray[1] = new int[3] {4,5,6};
+
+            jagarray[2] = new int[4] { 7, 8, 9, 0 };
+ 
+            //int rw = 2;
+
+            //    int cl = 0;
+
+            //Console.WriteLine(jagarray[rw].Length);
+ 
+ 
+            //for (int r = 0; r < 3; r++)
+
+            //{
+
+            //    len = jagarray[r].Length;
+
+            //    for (int c = 0; c < len ; c++)
+
+            //    {
+ 
+            //        Console.WriteLine("Enter value for {0} {1}", r, c);
+
+            //        arr1[r, c] = Convert.ToInt32(Console.ReadLine());
+ 
+            //    }
+ 
+            //}
+ 
+            for (int r = 0; r < 3; r++)
+
+            {
+
+                foreach (int num in jagarray[r])
+
+                {
+
+                    Console.Write(num  + "\t");
+
+                }
+
+                Console.WriteLine();
+ 
+            }
+ 
+ 
+        }
+
+    }
+
+}
+
+Structure accept values
+  
+using System;
+					
+public class Program
+{	
+	struct Book
+	{
+		public int ID;
+		public string Name;
+		public int Price;
+	}
+	public static void Main()
+	{
+		Book b1;
+		Console.WriteLine("Enter Book ID:");
+		b1.ID = Convert.ToInt32(Console.ReadLine());
+		Console.WriteLine("Enter Book Name:");
+		b1.Name = Console.ReadLine();
+		Console.WriteLine("Enter Book Price:");
+		b1.Price = Convert.ToInt32(Console.ReadLine());
+		
+		Console.WriteLine("ID = {0}, Name = {1}, Price = {2}",b1.ID,b1.Name,b1.Price);
+	}
+}
+
+internal class StructDemo
+
+  {
+
+      struct Book
+
+      {
+ 
+          public int ID;
+
+          public string Name;
+
+          public float Price;
+
+      }
+
+      static void Main(string[] args)
+
+      {
+ 
+ 
+          Book book1;
+
+          book1.ID= 101;
+
+          book1.Name = "Learning C#";
+
+          book1.Price = 790.50f;
+ 
+          Console.WriteLine("Id = {0} Name = {1} Price ={2}",book1.ID,book1.Name,book1.Price);
+ 
+ 
+ 
+      }
+
+  }
+ 
+using System;
+					
+public class Program
+{	
+	struct Book
+	{
+		public int ID;
+		public string Name;
+		public int Price;
+	}
+	public static void Main()
+	{
+		int n = 0;
+		Console.WriteLine("How many books?");
+		n = Convert.ToInt32(Console.ReadLine());
+		Book[] b1 = new Book[n];
+		for(int i = 0; i<n;i++)
+		{
+		Console.WriteLine("Enter Book ID {0}:",i);
+		b1[i].ID = Convert.ToInt32(Console.ReadLine());
+		Console.WriteLine("Enter Book Name {0}:",i);
+		b1[i].Name = Console.ReadLine();
+		Console.WriteLine("Enter Book Price {0}:",i);
+		b1[i].Price = Convert.ToInt32(Console.ReadLine());
+		}
+		Console.WriteLine("The books are:");
+		for(int i = 0; i<n;i++)
+		{Console.WriteLine("ID = {0}, Name = {1}, Price = {2}",b1[i].ID,b1[i].Name,b1[i].Price);}
+	}
+}
+
+internal class EnumDemo
+
+{
+
+     enum Cards { VisaCard,MasterCard};
+
+     static void Main(string[] args)
+
+     {
+ 
+         int m = (int)Cards.MasterCard;
+
+         Console.WriteLine(m);
+ 
+     }
+
+}
+
+using System;
+					
+public class Program
+{
+	public static void Main()
+	{
+		//string name = "JACK";
+		//Console.WriteLine(name.Length);
+		//Console.WriteLine(name.ToLower());
+		//if(name.Contains("o") || name.StartsWith("j"))
+		//	Console.WriteLine("Contains");
+		//else
+		//	Console.WriteLine("Does not Contain");
+		string n = "  Hello. I am your Actual Intelligence!";
+		string[] spl = new string[9];
+		spl = n.Split(' ');
+		foreach(string s in spl)
+			Console.WriteLine(s);
+		Console.WriteLine();
+		Console.WriteLine(n.Trim(' '));
+		Console.WriteLine(n.Replace(' ','@'));
+		Console.WriteLine(n.Remove(0,n.Length - 19));
+	}
+}
+
+using System;
+using System.Text;
+					
+public class Program
+{
+	public static void Main()
+	{
+		Console.WriteLine("Enter a string:");
+		StringBuilder str = new StringBuilder(Console.ReadLine());
+		str.Append(" is the string you have entered.");
+		str.Insert(5, ",");
+		string a = str.ToString();
+		Console.WriteLine(str + a);
+	}
+}
+
+Class Example: 
+
+using System;
+					
+public class Program
+{
+	internal class ClassDemo
+	{
+		private int custId;
+		private long phone;
+		private string name;
+		private string email;
+		
+		//public void setCustDetails(int id, int phn, string cname, string mail)
+			
+		//{
+			//custId = id;
+			//phone = phn;
+			//name = cname;
+			//email = mail;
+		//}
+		
+		public ClassDemo(int id, long phn, string cname, string mail) // Constructor
+			
+		{
+			custId = id;
+			phone = phn;
+			name = cname;
+			email = mail;
+		}
+		
+		
+		public void disDetails()
+		{
+			Console.WriteLine("Your ID is: " + custId);
+			Console.WriteLine("Your phone is: " + phone);
+			Console.WriteLine("Your Name is: " + name);
+			Console.WriteLine("Your Email is: " + email);
+		}
+	}
+	public static void Main()
+	{
+		int id;
+		int phone;
+		string name;
+		string email;
+		//ClassDemo cust = new ClassDemo();
+		Console.WriteLine("Enter Id");
+		id = Convert.ToInt32(Console.ReadLine());
+		Console.WriteLine("Enter Phone");
+		phone = Convert.ToInt32(Console.ReadLine());
+		Console.WriteLine("Enter Name");
+		name = Console.ReadLine();
+		Console.WriteLine("Enter Email");
+		email = Console.ReadLine();
+		//cust.setCustDetails(id, phone, name, email);
+		//cust.disDetails();
+		
+		ClassDemo cust = new ClassDemo(id, phone, name, email); //Constructor in use
+		cust.disDetails();
+	}
+}
+
+namespace BankClassLibrary
+{
+    public class BankAcount
+    {
+        int accNo;
+        string accHolderName;
+        float balance;
+        public bool Register()
+        {
+            accNo = 101;
+            accHolderName = "Manish";
+            balance = 1000.0f;
+            return true;
+        }
+        public void Withdraw() { }
+        public void Deposit() { }
+    }
+}
+ 
