@@ -1,0 +1,38 @@
+﻿@model TwitterClone.Models.UserTweetModel
+
+<div>
+    <h4>Tweet</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            @Html.DisplayNameFor(model => model.Tweet.UserId)
+        </div>
+        <div class="col-md-3">
+            @Html.DisplayNameFor(model => model.Tweet.Message)
+        </div>
+        <div class="col-md-3">
+            @Html.DisplayNameFor(model => model.Tweet.Created)
+        </div>
+    </div>
+    @if (Model != null)
+    {
+        foreach (var item in Model.TweetsList)
+        {
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.DisplayFor(model => item.UserId)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(model => item.Message)
+                </div>
+                <div class="col-md-3">
+                    @Html.DisplayFor(model => item.Created)
+                </div>
+
+            </div>
+        }
+    }
+</div>
+<p>
+    @* @Html.ActionLink("Edit", "Edit", new { id = Model.TweetId }) |*@
+</p>
