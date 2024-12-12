@@ -208,11 +208,15 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Tweet\Index.cshtml" />
+    <Content Include="Views\Tweet\Details.cshtml" />
+    <Content Include="Views\Tweet\Create.cshtml" />
+    <Content Include="Views\Tweet\Edit.cshtml" />
+    <Content Include="Views\Tweet\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Following\" />
-    <Folder Include="Views\Tweet\" />
     <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>

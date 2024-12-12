@@ -95,9 +95,10 @@ namespace Twitter.Controllers
         }
 
         // GET: Tweet/Delete/5
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int tweetId)
         {
-            var tweet = await _tweetService.GetTweetByIdAsync(id); // Use the service to get tweet for confirmation
+            
+            var tweet = await _tweetService.GetTweetByIdAsync(tweetId); // Use the service to get tweet for confirmation
             if (tweet != null)
             {
                 return View(tweet);
@@ -108,9 +109,10 @@ namespace Twitter.Controllers
         // POST: Tweet/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int tweetId)
         {
-            var success = await _tweetService.DeleteTweetAsync(id); // Use the service to delete the tweet
+            
+            var success = await _tweetService.DeleteTweetAsync(tweetId); // Use the service to delete the tweet
             if (success)
             {
                 return RedirectToAction("Index"); // Redirect to index view after successful deletion
