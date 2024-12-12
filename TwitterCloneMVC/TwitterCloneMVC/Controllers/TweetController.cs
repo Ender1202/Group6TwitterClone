@@ -1,124 +1,154 @@
 ﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Web.Mvc;
 using Twitter.Entities;
-using Twitter.Services;
+using TwitterClone.Services;
 
-namespace Twitter.Controllers
+namespace TwitterClone.Controllers
 {
     public class TweetController : Controller
     {
         private readonly TweetService _tweetService;
 
-        // Constructor: Initialize TweetService
         public TweetController()
         {
-            _tweetService = new TweetService(); // Instantiate the service
+            _tweetService = new TweetService();
         }
 
-        // GET: Tweet
-        public async Task<ActionResult> Index()
+        // GET: Tweet/UserTweets
+        public ActionResult UserTweets(string userId)
         {
-            var tweets = await _tweetService.GetAllTweetsAsync(); // Use the service to get all tweets
-            if (tweets != null)
+            try
             {
-                return View(tweets);
+                var tweets = _tweetService.GetAllTweets(userId);
+                if (tweets != null)
+                {
+                    return View(tweets);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "No tweets found for this user.";
+                    return View("Error");
+                }
             }
-            return View("Error"); // Return error view if request fails
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
         }
 
-        // GET: Tweet/Details/5
-        public async Task<ActionResult> Details(int id)
+        // GET: Tweet/UserFeed
+        public ActionResult UserFeed(string userId)
         {
-            var tweet = await _tweetService.GetTweetByIdAsync(id); // Use the service to get a tweet by ID
-            if (tweet != null)
+            try
             {
-                return View(tweet);
+                var tweets = _tweetService.GetUserFeed(userId);
+                if (tweets != null && tweets.Count > 0)
+                {
+                    return View(tweets);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "No feed found for this user.";
+                    return View("Error");
+                }
             }
-            return HttpNotFound(); // Return HTTP Not Found if tweet not found
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
         }
 
         // GET: Tweet/Create
         public ActionResult Create()
         {
-            return View(); // Return view to create a new tweet
+            return View();
         }
 
         // POST: Tweet/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Tweet tweet)
+        public ActionResult Create(Tweet tweet)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var success = await _tweetService.CreateTweetAsync(tweet); // Use the service to create a tweet
-                if (success)
+                bool isCreated = _tweetService.CreateTweet(tweet);
+                if (isCreated)
                 {
-                    return RedirectToAction("Index"); // Redirect to index view after successful creation
+                    ViewBag.Message = "Tweet posted successfully!";
+                    return RedirectToAction("UserTweets", new { userId = tweet.UserId });
                 }
-
-                ModelState.AddModelError("", "Error creating tweet"); // Add error if API request fails
+                else
+                {
+                    ViewBag.ErrorMessage = "Error posting tweet.";
+                    return View("Error");
+                }
             }
-
-            return View(tweet); // Return view with validation errors
-        }
-
-        // GET: Tweet/Edit/5
-        public async Task<ActionResult> Edit(int id)
-        {
-            var tweet = await _tweetService.GetTweetByIdAsync(id); // Use the service to get the tweet for editing
-            if (tweet != null)
+            catch (Exception ex)
             {
-                return View(tweet);
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
             }
-            return HttpNotFound(); // Return HTTP Not Found if tweet not found
         }
 
-        // POST: Tweet/Edit/5
+        // GET: Tweet/Edit
+        public ActionResult Edit(int id)
+        {
+            // Fetch the tweet by ID (for editing purpose) from the service or database
+            // (You may need to add a method for fetching individual tweet in your TweetService)
+            var tweet = _tweetService.GetAllTweets("userId").OrderByDescending(x=>x.Created);  // Adjust logic accordingly
+            return View(tweet);
+        }
+
+        // POST: Tweet/Edit
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Tweet tweet)
+        public ActionResult Edit(Tweet tweet)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var success = await _tweetService.UpdateTweetAsync(tweet); // Use the service to update the tweet
-                if (success)
+                bool isEdited = _tweetService.EditTweet(tweet);
+                if (isEdited)
                 {
-                    return RedirectToAction("Index"); // Redirect to index view after successful update
+                    ViewBag.Message = "Tweet edited successfully!";
+                    return RedirectToAction("UserTweets", new { userId = tweet.UserId });
                 }
-
-                ModelState.AddModelError("", "Error updating tweet"); // Add error if API request fails
+                else
+                {
+                    ViewBag.ErrorMessage = "Error editing tweet.";
+                    return View("Error");
+                }
             }
-
-            return View(tweet); // Return view with validation errors
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
         }
 
-        // GET: Tweet/Delete/5
-        public async Task<ActionResult> Delete(int tweetId)
+        // POST: Tweet/Delete
+        [HttpPost]
+        public ActionResult Delete(int id, string userId)
         {
-            
-            var tweet = await _tweetService.GetTweetByIdAsync(tweetId); // Use the service to get tweet for confirmation
-            if (tweet != null)
+            try
             {
-                return View(tweet);
+                bool isDeleted = _tweetService.DeleteTweet(id);
+                if (isDeleted)
+                {
+                    ViewBag.Message = "Tweet deleted successfully!";
+                    return RedirectToAction("UserTweets", new { userId = userId });
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Error deleting tweet.";
+                    return View("Error");
+                }
             }
-            return HttpNotFound(); // Return HTTP Not Found if tweet not found
-        }
-
-        // POST: Tweet/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int tweetId)
-        {
-            
-            var success = await _tweetService.DeleteTweetAsync(tweetId); // Use the service to delete the tweet
-            if (success)
+            catch (Exception ex)
             {
-                return RedirectToAction("Index"); // Redirect to index view after successful deletion
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
             }
-
-            return View("Error"); // Return error view if deletion fails
         }
     }
 }

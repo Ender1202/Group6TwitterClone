@@ -1,65 +1,128 @@
 ﻿using System.Net.Http;
-using System.Threading.Tasks;
+using System.Text;
+using Newtonsoft.Json;
 using Twitter.Entities;
-using System.Collections.Generic;
-using System;
 
-namespace Twitter.Services
+namespace TwitterClone.Services
 {
     public class UserService
     {
+        private static readonly string apiBaseUrl = "http://localhost:51764/User/"; // Replace with your actual API URL
         private readonly HttpClient _httpClient;
 
-        // Constructor: Initialize HttpClient for API calls
         public UserService()
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://yourapiurl.com/api/") // API base URL
-            };
+            _httpClient = new HttpClient();
         }
 
-        // Method to get all users
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        // Add User
+        public bool AddUser(User user)
         {
-            var response = await _httpClient.GetAsync("users");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return await response.Content.ReadAsAsync<IEnumerable<User>>();
+                var jsonContent = JsonConvert.SerializeObject(user);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                var response = _httpClient.PostAsync(apiBaseUrl + "Add", content).Result; // Blocking on the async call
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            return null;
-        }
-
-        // Method to get a user by ID
-        public async Task<User> GetUserByIdAsync(string userId)
-        {
-            var response = await _httpClient.GetAsync($"users/{userId}");
-            if (response.IsSuccessStatusCode)
+            catch
             {
-                return await response.Content.ReadAsAsync<User>();
+                return false;
             }
-            return null;
         }
 
-        // Method to create a new user
-        public async Task<bool> CreateUserAsync(User user)
+        // Delete User
+        public bool DeleteUser(string userId)
         {
-            var response = await _httpClient.PostAsJsonAsync("users", user);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var response = _httpClient.DeleteAsync(apiBaseUrl + "Delete/" + userId).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        // Method to update an existing user
-        public async Task<bool> UpdateUserAsync(User user)
+        // Edit User
+        public bool EditUser(User user)
         {
-            var response = await _httpClient.PutAsJsonAsync($"users/{user.UserId}", user);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(user);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                var response = _httpClient.PutAsync(apiBaseUrl + "EditProfile", content).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        // Method to delete a user
-        public async Task<bool> DeleteUserAsync(string userId)
+        // Search User
+        public User SearchUser(string username)
         {
-            var response = await _httpClient.DeleteAsync($"users/{userId}");
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + "Search/" + username).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<User>(responseData);
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        // Validate User (Login)
+        public User ValidateUser(string username, string password)
+        {
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + "Login/" + username + "/" + password).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<User>(responseData);
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

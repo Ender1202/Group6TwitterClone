@@ -1,0 +1,146 @@
+﻿@model Twitter.Entities.User
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Page Title: This is the heading displayed at the top of the page, centered and with some margin-bottom -->
+<h2 class="text-center mb-4">Create Account</h2>
+
+<!-- Begin the form for creating a new user -->
+
+@using (Html.BeginForm())
+
+{
+
+    @Html.AntiForgeryToken() <!-- Prevents cross-site request forgery attacks -->
+
+    <div class="container">
+        <!-- This row centers the form on the page -->
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Card: Adds padding and a clean border around the form -->
+                <div class="card p-4">
+                    <!-- Card Header: This is the title of the form displayed at the top of the card -->
+                    <h4 class="card-title text-center mb-4">Create Your Account</h4>
+
+                    <!-- Validation Summary: Displays a summary of all validation errors (if any) -->
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <!-- UserName Input Field -->
+                    <div class="mb-3">
+
+                        @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "form-label" }) <!-- Label for the input -->
+
+                        @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } }) <!-- Input field styled with Bootstrap -->
+
+                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" }) <!-- Display validation message for UserName -->
+                    </div>
+
+                    <!-- Mobile Input Field -->
+                    <div class="mb-3">
+
+                        @Html.LabelFor(model => model.Mobile, htmlAttributes: new { @class = "form-label" })
+
+                        @Html.EditorFor(model => model.Mobile, new { htmlAttributes = new { @class = "form-control" } })
+
+                        @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+                    </div>
+
+                    <!-- Password Input Field -->
+                    <div class="mb-3">
+
+                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "form-label" })
+
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+
+                    <!-- Confirm Password Input Field -->
+                    <div class="mb-3">
+
+                        @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "form-label" })
+
+                        @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control" } })
+
+                        @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                    </div>
+
+                    <!-- Bio Input Field -->
+                    <div class="mb-3">
+
+                        @Html.LabelFor(model => model.Bio, htmlAttributes: new { @class = "form-label" })
+
+                        @Html.EditorFor(model => model.Bio, new { htmlAttributes = new { @class = "form-control" } })
+
+                        @Html.ValidationMessageFor(model => model.Bio, "", new { @class = "text-danger" })
+                    </div>
+
+                     @*Picture Input Field*@ 
+                    <div class="mb-3">
+
+                        @Html.LabelFor(model => model.Pic, htmlAttributes: new { @class = "form-label" })
+
+                        @Html.EditorFor(model => model.Pic, new { htmlAttributes = new { @class = "form-control" } })
+
+                        @Html.ValidationMessageFor(model => model.Pic, "", new { @class = "text-danger" })
+                    </div>
+
+                     @*Full Name Input Field*@ 
+                    <div class="mb-3">
+
+                        @Html.LabelFor(model => model.Fullname, htmlAttributes: new { @class = "form-label" })
+
+                        @Html.EditorFor(model => model.Fullname, new { htmlAttributes = new { @class = "form-control" } })
+
+                        @Html.ValidationMessageFor(model => model.Fullname, "", new { @class = "text-danger" })
+                    </div>
+
+                     Email Input Field 
+                    <div class="mb-3">
+
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "form-label" })
+
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+
+                    <!-- Joining Date Input Field -->
+                    <div class="mb-3">
+
+                        @Html.LabelFor(model => model.JoiningDate, htmlAttributes: new { @class = "form-label" })
+
+                        @Html.EditorFor(model => model.JoiningDate, new { htmlAttributes = new { @class = "form-control" } })
+
+                        @Html.ValidationMessageFor(model => model.JoiningDate, "", new { @class = "text-danger" })
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-flex justify-content-center">
+                        <!-- A full-width submit button styled with Bootstrap primary color -->
+                        <input type="submit" value="Create Account" class="btn btn-primary btn-block w-100" />
+                    </div>
+                </div> <!-- End of Card -->
+                <!-- Link to go back to the list, styled as a button using Bootstrap's link button class -->
+                <div class="text-center mt-3">
+
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-link" })
+                </div>
+                @ViewBag.Message
+            </div>
+        </div>
+    </div>
+
+}
+
+<!-- Section to include validation scripts for client-side validation -->
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval") <!-- jQuery validation bundle -->
+
+}
+

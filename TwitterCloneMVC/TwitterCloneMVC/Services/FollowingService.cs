@@ -1,58 +1,151 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using Twitter.Entities;
-using System.Collections.Generic;
-using System;
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using Newtonsoft.Json;
 
-namespace Twitter.Services
+namespace TwitterClone.Services
 {
-    public class FollowingService
+    public class FollowService
     {
+        private static readonly string apiBaseUrl = "http://localhost:51764/Follow/"; // Replace with your actual API URL
         private readonly HttpClient _httpClient;
 
-        // Constructor: Initialize HttpClient for API calls
-        public FollowingService()
+        public FollowService()
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://yourapiurl.com/api/") // API base URL
-            };
+            _httpClient = new HttpClient();
         }
 
-        // Method to get all followings for a user
-        public async Task<IEnumerable<Following>> GetAllFollowingsAsync(string userId)
+        // Follow User
+        public bool FollowUser(string userId, string followerId)
         {
-            var response = await _httpClient.GetAsync($"followings/user/{userId}");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return await response.Content.ReadAsAsync<IEnumerable<Following>>();
+                var response = _httpClient.PostAsync(apiBaseUrl + "follow/" + userId + "/" + followerId, null).Result;
+                return response.IsSuccessStatusCode;
             }
-            return null;
-        }
-
-        // Method to get a following by user and follower IDs
-        public async Task<Following> GetFollowingByIdAsync(string userId, string followingId)
-        {
-            var response = await _httpClient.GetAsync($"followings/{userId}/{followingId}");
-            if (response.IsSuccessStatusCode)
+            catch
             {
-                return await response.Content.ReadAsAsync<Following>();
+                return false;
             }
-            return null;
         }
 
-        // Method to create a following
-        public async Task<bool> CreateFollowingAsync(Following following)
+        // Unfollow User
+        public bool UnfollowUser(string userId, string followingId)
         {
-            var response = await _httpClient.PostAsJsonAsync("followings", following);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var response = _httpClient.DeleteAsync(apiBaseUrl + "unfollow/" + userId + "/" + followingId).Result;
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        // Method to delete a following
-        public async Task<bool> DeleteFollowingAsync(int followingId)
+        // Get Followers
+        public List<string> GetFollowers(string userId)
         {
-            var response = await _httpClient.DeleteAsync($"followings/{followingId}");
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + "Followers/" + userId).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<List<string>>(responseData);
+                }
+
+                return new List<string>();
+            }
+            catch
+            {
+                return new List<string>();
+            }
+        }
+
+        // Get Following Users
+        public List<string> GetFollowingUsers(string userId)
+        {
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + "Following/" + userId).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<List<string>>(responseData);
+                }
+
+                return new List<string>();
+            }
+            catch
+            {
+                return new List<string>();
+            }
+        }
+
+        // Get Followers Count
+        public int GetFollowersCount(string userId)
+        {
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + "FollowersCount/" + userId).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return int.Parse(responseData);
+                }
+
+                return 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        // Get Following Count
+        public int GetFollowingCount(string userId)
+        {
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + "FollowingCount/" + userId).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return int.Parse(responseData);
+                }
+
+                return 0;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        // Is Following
+        public bool IsFollowing(string userId, string followingId)
+        {
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + followingId + "/isFollowing/" + userId).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    dynamic result = JsonConvert.DeserializeObject(responseData);
+                    return result.isfollowing;
+                }
+
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

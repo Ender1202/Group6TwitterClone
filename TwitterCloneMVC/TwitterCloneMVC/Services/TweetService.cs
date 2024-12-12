@@ -1,65 +1,113 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using Twitter.Entities;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
+using Twitter.Entities;
 
-namespace Twitter.Services
+namespace TwitterClone.Services
 {
     public class TweetService
     {
+        private static readonly string apiBaseUrl = "http://localhost:51764/Tweet/"; // Replace with your actual API URL
         private readonly HttpClient _httpClient;
 
-        // Constructor: Initialize HttpClient for API calls
         public TweetService()
         {
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("https://yourapiurl.com/api/") // API base URL
-            };
+            _httpClient = new HttpClient();
         }
 
-        // Method to get all tweets
-        public async Task<IEnumerable<Tweet>> GetAllTweetsAsync()
+        // Post Tweet
+        public bool CreateTweet(Tweet tweet)
         {
-            var response = await _httpClient.GetAsync("tweets");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                return await response.Content.ReadAsAsync<IEnumerable<Tweet>>();
+                var jsonContent = JsonConvert.SerializeObject(tweet);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                var response = _httpClient.PostAsync(apiBaseUrl + "PostTweet", content).Result;
+
+                return response.IsSuccessStatusCode;
             }
-            return null;
-        }
-
-        // Method to get a tweet by ID
-        public async Task<Tweet> GetTweetByIdAsync(int id)
-        {
-            var response = await _httpClient.GetAsync($"tweets/{id}");
-            if (response.IsSuccessStatusCode)
+            catch
             {
-                return await response.Content.ReadAsAsync<Tweet>();
+                return false;
             }
-            return null;
         }
 
-        // Method to create a new tweet
-        public async Task<bool> CreateTweetAsync(Tweet tweet)
+        // Edit Tweet
+        public bool EditTweet(Tweet tweet)
         {
-            var response = await _httpClient.PostAsJsonAsync("tweets", tweet);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var jsonContent = JsonConvert.SerializeObject(tweet);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                var response = _httpClient.PutAsync(apiBaseUrl + "EditTweet", content).Result;
+
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        // Method to update an existing tweet
-        public async Task<bool> UpdateTweetAsync(Tweet tweet)
+        // Delete Tweet
+        public bool DeleteTweet(int tweetId)
         {
-            var response = await _httpClient.PutAsJsonAsync($"tweets/{tweet.TweetId}", tweet);
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var response = _httpClient.DeleteAsync(apiBaseUrl + "DeleteTweet/" + tweetId).Result;
+
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        // Method to delete a tweet
-        public async Task<bool> DeleteTweetAsync(int id)
+        // Get All Tweets by User
+        public List<Tweet> GetAllTweets(string userId)
         {
-            var response = await _httpClient.DeleteAsync($"tweets/{id}");
-            return response.IsSuccessStatusCode;
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + userId + "/tweets").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<List<Tweet>>(responseData);
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        // Get Feed for User
+        public List<Tweet> GetUserFeed(string userId)
+        {
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + userId + "/feed").Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<List<Tweet>>(responseData);
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

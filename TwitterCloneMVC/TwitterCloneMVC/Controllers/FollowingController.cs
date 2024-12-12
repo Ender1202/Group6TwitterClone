@@ -1,92 +1,156 @@
 ﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using Twitter.Entities;
-using Twitter.Services;
+using TwitterClone.Services;
 
-namespace Twitter.Controllers
+namespace TwitterClone.Controllers
 {
     public class FollowingController : Controller
     {
-        private readonly FollowingService _followingService;
+        private readonly FollowService _followService;
 
-        // Constructor: Initialize FollowingService
         public FollowingController()
         {
-            _followingService = new FollowingService(); // Instantiate the service
+            _followService = new FollowService();
         }
 
-        // GET: Following
-        public async Task<ActionResult> Index(string userId)
+        // GET: Follow/Followers
+        public ActionResult Followers(string userId)
         {
-            var followings = await _followingService.GetAllFollowingsAsync(userId); // Use the service to get all followings for a user
-            if (followings != null)
+            try
             {
-                return View(followings);
-            }
-            return View("Error"); // Return error view if request fails
-        }
-
-        // GET: Following/Details/5
-        public async Task<ActionResult> Details(string userId, string followingId)
-        {
-            var following = await _followingService.GetFollowingByIdAsync(userId, followingId); // Use the service to get a specific following
-            if (following != null)
-            {
-                return View(following);
-            }
-            return HttpNotFound(); // Return HTTP Not Found if following not found
-        }
-
-        // GET: Following/Create
-        public ActionResult Create()
-        {
-            return View(); // Return view to create a new following
-        }
-
-        // POST: Following/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Following following)
-        {
-            if (ModelState.IsValid)
-            {
-                var success = await _followingService.CreateFollowingAsync(following); // Use the service to create a following
-                if (success)
+                var followers = _followService.GetFollowers(userId);
+                if (followers != null && followers.Count > 0)
                 {
-                    return RedirectToAction("Index"); // Redirect to index view after successful creation
+                    return View(followers);
                 }
-
-                ModelState.AddModelError("", "Error creating following"); // Add error if API request fails
+                else
+                {
+                    ViewBag.ErrorMessage = "No followers found.";
+                    return View("Error");
+                }
             }
-
-            return View(following); // Return view with validation errors
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
         }
 
-        // GET: Following/Delete/5
-        public async Task<ActionResult> Delete(int id)
+        // GET: Follow/Following
+        public ActionResult Following(string userId)
         {
-            var following = await _followingService.GetFollowingByIdAsync(id.ToString(), null); // Use the service to get following for confirmation
-            if (following != null)
+            try
             {
-                return View(following);
+                var following = _followService.GetFollowingUsers(userId);
+                if (following != null && following.Count > 0)
+                {
+                    return View(following);
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "No following found.";
+                    return View("Error");
+                }
             }
-            return HttpNotFound(); // Return HTTP Not Found if following not found
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
         }
 
-        // POST: Following/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        // GET: Follow/FollowUser
+        public ActionResult FollowUser(string userId, string followerId)
         {
-            var success = await _followingService.DeleteFollowingAsync(id); // Use the service to delete the following
-            if (success)
+            try
             {
-                return RedirectToAction("Index"); // Redirect to index view after successful deletion
+                bool isFollowed = _followService.FollowUser(userId, followerId);
+                if (isFollowed)
+                {
+                    ViewBag.Message = "Successfully followed!";
+                    return RedirectToAction("Following", new { userId = userId });
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Error following user.";
+                    return View("Error");
+                }
             }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
 
-            return View("Error"); // Return error view if deletion fails
+        // GET: Follow/UnfollowUser
+        public ActionResult UnfollowUser(string userId, string followingId)
+        {
+            try
+            {
+                bool isUnfollowed = _followService.UnfollowUser(userId, followingId);
+                if (isUnfollowed)
+                {
+                    ViewBag.Message = "Successfully unfollowed!";
+                    return RedirectToAction("Following", new { userId = userId });
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Error unfollowing user.";
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
+        // GET: Follow/FollowersCount
+        public ActionResult FollowersCount(string userId)
+        {
+            try
+            {
+                int count = _followService.GetFollowersCount(userId);
+                return View(count);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
+        // GET: Follow/FollowingCount
+        public ActionResult FollowingCount(string userId)
+        {
+            try
+            {
+                int count = _followService.GetFollowingCount(userId);
+                return View(count);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
+        // GET: Follow/IsFollowing
+        public ActionResult IsFollowing(string userId, string followingId)
+        {
+            try
+            {
+                bool isFollowing = _followService.IsFollowing(userId, followingId);
+                ViewBag.IsFollowing = isFollowing;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
         }
     }
 }

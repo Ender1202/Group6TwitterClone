@@ -1,122 +1,153 @@
 ﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using Twitter.Entities;
-using Twitter.Services;
+using TwitterClone.Services;
 
-namespace Twitter.Controllers
+namespace TwitterClone.Controllers
 {
     public class UserController : Controller
     {
         private readonly UserService _userService;
 
-        // Constructor: Initialize UserService 
         public UserController()
         {
-            _userService = new UserService(); // Instantiate the service
+            _userService = new UserService();
         }
 
-        // GET: User
-        public async Task<ActionResult> Index()
+        // GET: User/Search
+        public ActionResult Search(string username)
         {
-            var users = await _userService.GetAllUsersAsync(); // Use the service to get all users
-            if (users != null)
+            try
             {
-                return View(users);
-            }
-            return View("Error"); // Return error view if request fails
-        }
-
-        // GET: User/Details/5
-        public async Task<ActionResult> Details(string id)
-        {
-            var user = await _userService.GetUserByIdAsync(id); // Use the service to get a user by ID
-            if (user != null)
-            {
-                return View(user);
-            }
-            return HttpNotFound(); // Return HTTP Not Found if user not found
-        }
-
-        // GET: User/Create
-        public ActionResult Create()
-        {
-            return View(); // Return view to create a new user
-        }
-
-        // POST: User/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(User user)
-        {
-            if (ModelState.IsValid)
-            {
-                var success = await _userService.CreateUserAsync(user); // Use the service to create a user
-                if (success)
+                var user = _userService.SearchUser(username);
+                if (user != null)
                 {
-                    return RedirectToAction("Index"); // Redirect to index view after successful creation
+                    return View(user);
                 }
-
-                ModelState.AddModelError("", "Error creating user"); // Add error if API request fails
-            }
-
-            return View(user); // Return view with validation errors
-        }
-
-        // GET: User/Edit/5
-        public async Task<ActionResult> Edit(string id)
-        {
-            var user = await _userService.GetUserByIdAsync(id); // Use the service to get the user for editing
-            if (user != null)
-            {
-                return View(user);
-            }
-            return HttpNotFound(); // Return HTTP Not Found if user not found
-        }
-
-        // POST: User/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(User user)
-        {
-            if (ModelState.IsValid)
-            {
-                var success = await _userService.UpdateUserAsync(user); // Use the service to update the user
-                if (success)
+                else
                 {
-                    return RedirectToAction("Index"); // Redirect to index view after successful update
+                    ViewBag.ErrorMessage = "User not found.";
+                    return View("Error");
                 }
-
-                ModelState.AddModelError("", "Error updating user"); // Add error if API request fails
             }
-
-            return View(user); // Return view with validation errors
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
         }
 
-        // GET: User/Delete/5
-        public async Task<ActionResult> Delete(string id)
+        // GET: User/Login
+        public ActionResult Login()
         {
-            var user = await _userService.GetUserByIdAsync(id); // Use the service to get user for confirmation
-            if (user != null)
-            {
-                return View(user);
-            }
-            return HttpNotFound(); // Return HTTP Not Found if user not found
+            return View();
         }
 
-        // POST: User/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(string id)
+        // POST: User/Login
+        [HttpPost]
+        public ActionResult Login(string username, string password)
         {
-            var success = await _userService.DeleteUserAsync(id); // Use the service to delete the user
-            if (success)
+            try
             {
-                return RedirectToAction("Index"); // Redirect to index view after successful deletion
+                var user = _userService.ValidateUser(username, password);
+                if (user != null)
+                {
+                    ViewBag.Message = "Login successful!";
+                    return RedirectToAction("Home"); // Redirect to some dashboard or home page
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Invalid username or password.";
+                    return View("Index");
+                }
             }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Index");
+            }
+        }
 
-            return View("Error"); // Return error view if deletion fails
+        // GET: User/Add
+        public ActionResult Add()
+        {
+            return View();
+        }
+
+        // POST: User/Add
+        [HttpPost]
+        public ActionResult Add(User user)
+        {
+            try
+            {
+                user.UserId = "U" + new Random().Next(1000, 9999);
+                bool isAdded = _userService.AddUser(user);
+                if (isAdded)
+                {
+                    ViewBag.Message = "User added successfully!";
+                    return RedirectToAction("Home"); // Redirect to home page after adding
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Error adding user.";
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
+        // POST: User/Delete
+        [HttpPost]
+        public ActionResult Delete(string userId)
+        {
+            try
+            {
+                bool isDeleted = _userService.DeleteUser(userId);
+                if (isDeleted)
+                {
+                    ViewBag.Message = "User deleted successfully!";
+                    return RedirectToAction("Index", "Home"); // Redirect after deletion
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Error deleting user.";
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+        }
+
+        // POST: User/Edit
+        [HttpPost]
+        public ActionResult Edit(User user)
+        {
+            try
+            {
+                bool isEdited = _userService.EditUser(user);
+                if (isEdited)
+                {
+                    ViewBag.Message = "User profile updated successfully!";
+                    return RedirectToAction("Profile", "User", new { username = user.UserName });
+                }
+                else
+                {
+                    ViewBag.ErrorMessage = "Error updating user profile.";
+                    return View("Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
         }
     }
 }
