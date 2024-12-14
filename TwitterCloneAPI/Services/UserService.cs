@@ -52,7 +52,7 @@ namespace TwitterClone.Services
 
         public User Get(string username)
         {
-            return context.Users.FirstOrDefault(x => x.UserName == username);
+            return context.Users.SingleOrDefault(x => x.UserName == username);
         }
 
         public User GetById(string id)

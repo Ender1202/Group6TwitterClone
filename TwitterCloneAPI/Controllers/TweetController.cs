@@ -14,16 +14,17 @@ namespace TwitterClone.Controllers
     public class TweetController : ApiController
     {
         ITweet rep;
+        IRetweet retweetrepository;
         public TweetController()
         {
             rep = new TweetService();
+            retweetrepository = new RetweetService();
         }
         [HttpPost, Route("PostTweet")]
         public IHttpActionResult CreateTweet([FromBody] Tweet tweet)
         {
             try
             {
-                tweet.Created = DateTime.Now;
                 rep.Add(tweet);
                 return Ok(tweet);
             }
@@ -61,7 +62,7 @@ namespace TwitterClone.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet,Route("{userId}/tweets")]
+        [HttpGet, Route("{userId}/tweets")]
         public IHttpActionResult GetUserTweet(string userId)
         {
             try
@@ -82,6 +83,26 @@ namespace TwitterClone.Controllers
             {
                 var tweets = rep.GetAllFeed(userId);
                 return Ok(tweets);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost, Route("{userId}/Retweet/{tweetId}")]
+        public IHttpActionResult Retweet(string userId, int tweetId)
+        {
+            try
+            {
+                var retweet = retweetrepository.Retweet(userId, tweetId);
+                if (retweet != null)
+                {
+                    return Ok(retweet);
+                }
+                else
+                    return BadRequest("Retweet failed!");
             }
             catch (Exception ex)
             {

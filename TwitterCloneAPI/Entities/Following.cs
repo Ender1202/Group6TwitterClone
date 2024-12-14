@@ -12,14 +12,17 @@ namespace TwitterClone.Entities
         [Key]
         public int Id { get; set; }
 
+        //Navigation Property
+        public User User { get; set; }
+
+        //Navigation Property
+        public User Follower { get; set; }
+
         [ForeignKey("User")]
         public string UserId { get; set; }
 
         [ForeignKey("Follower")]
         public string FollowingId { get; set; }
-        //Navigation Property
-        public User User { get; set; }
-        //Navigation Property
-        public User Follower { get; set; }
+       
     }
 }

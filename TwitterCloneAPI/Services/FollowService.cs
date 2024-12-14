@@ -19,7 +19,8 @@ namespace TwitterClone.Services
         {
             if (!IsFollowing(userId, followingId))
             {
-                var follower = new Following { FollowingId = followingId, UserId = userId };
+                Random random = new Random();
+                var follower = new Following {Id = random.Next(1000,9999), FollowingId = followingId, UserId = userId };
                 context.Followings.Add(follower);
                 context.SaveChanges();
             }

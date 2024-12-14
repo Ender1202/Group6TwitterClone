@@ -17,6 +17,9 @@ namespace TwitterClone.Services
         }
         public void Add(Tweet tweet)
         {
+            Random random = new Random();
+            tweet.TweetId = random.Next(1000, 9999);
+            tweet.Created = DateTime.Now;
             context.Tweets.Add(tweet);
             context.SaveChanges();
         }

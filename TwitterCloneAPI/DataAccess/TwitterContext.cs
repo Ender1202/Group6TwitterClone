@@ -13,5 +13,7 @@ namespace TwitterClone.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<Tweet> Tweets { get; set; }
         public DbSet<Following> Followings { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<Retweet> Retweets { get; set; }
     }
 }
