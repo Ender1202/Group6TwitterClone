@@ -1,0 +1,204 @@
+﻿@model List<Twitter.Models.Tweet>
+@{
+    Layout = null;
+    var loggedInUser = (Twitter.Models.User)Session["User"];
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThreadX</title>
+    @*<link href="https://fonts.googleapis.com/css2?family=Arial:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif; /* Simple and clean font */
+            background-color: #f1f1f1; /* Light gray background */
+            text-align: center; /* Center the text */
+            margin: 0;
+            padding: 0;
+        }
+
+        .thread-header {
+            font-size: 20px; /* Large size for the header */
+            font-weight: bold; /* Bold for emphasis */
+            color: #333; /* Dark text for contrast */
+            margin-top: 50px; /* Space from the top */
+        }
+
+            .thread-header span {
+                color: #007bff; /* Blue color for the X */
+            }
+    </style>*@
+    <link rel="icon" href=https://abs.twimg.com/favicons/twitter.ico type="image/png" />
+    <link href=https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css rel="stylesheet" />
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js></script>
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js></script>
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js></script>
+</head>
+<body class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen bg-gray-100">
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+                @*<div class="flex items-center">
+            <img src=https://abs.twimg.com/favicons/twitter.ico alt="Logo" width="32" height="32" />
+        </div>*@
+                <div class="mb-4">
+                    <svg viewBox="0 0 24 24" class="h-8 w-8 text-blue-400" fill="currentColor">
+                        <g><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"></path></g>
+                    </svg>
+                </div>
+                @*<div class="thread-header">
+                    Thread<span>X</span>
+                </div>*@
+                @using (Html.BeginForm("Search", "User", FormMethod.Post))
+                {
+                    <div class="flex-grow max-w-xl px-4">
+                        <input type="text"
+                               placeholder="Search ThreadX"
+                               class="w-full bg-gray-100 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2" name="username" id="username" />
+                    </div>
+                }
+                <div class="flex items-center">
+                    <a href="/User/UserProfile" class="p-2 rounded-full hover:bg-gray-200"><strong>@loggedInUser.Fullname </strong></a>
+                    <img src="@loggedInUser.Pic" alt="Profile" class="profile-picture" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;" />
+                </div>
+            </div>
+        </header>
+
+        <div class="container mx-auto flex flex-col md:flex-row">
+            <!-- Left Sidebar -->
+            <div class="w-full md:w-1/4 p-4 md:block">
+                <div class="md:fixed">
+                    @*<div class="mb-4">
+                            <svg viewBox="0 0 24 24" class="h-8 w-8 text-blue-400" fill="currentColor">
+                                <g><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"></path></g>
+                            </svg>
+                        </div>*@
+                    <nav class="flex flex-row md:flex-col justify-around md:justify-start">
+                        <a href="/User/Dashboard" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
+                                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z" />
+                                <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z" />
+                            </svg>
+                            Home
+                        </a>
+                        <a href="/User/UserProfile" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                            </svg>
+                            Profile
+                        </a>
+                        <a href="/Tweet/UserTweets" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
+                                <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334q.002-.211-.006-.422A6.7 6.7 0 0 0 16 3.542a6.7 6.7 0 0 1-1.889.518 3.3 3.3 0 0 0 1.447-1.817 6.5 6.5 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.32 9.32 0 0 1-6.767-3.429 3.29 3.29 0 0 0 1.018 4.382A3.3 3.3 0 0 1 .64 6.575v.045a3.29 3.29 0 0 0 2.632 3.218 3.2 3.2 0 0 1-.865.115 3 3 0 0 1-.614-.057 3.28 3.28 0 0 0 3.067 2.277A6.6 6.6 0 0 1 .78 13.58a6 6 0 0 1-.78-.045A9.34 9.34 0 0 0 5.026 15" />
+                            </svg>
+                            My Tweets
+                        </a>
+
+
+                        <a href="#" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
+                            </svg>
+                            Notifications
+                        </a>
+
+                        <a href="#" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-heart" viewBox="0 0 16 16">
+                                <path d="M9 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h10s1 0 1-1-1-4-6-4-6 3-6 4m13.5-8.09c1.387-1.425 4.855 1.07 0 4.277-4.854-3.207-1.387-5.702 0-4.276Z" />
+                            </svg>
+                            Followers
+                        </a>
+
+                        <a href="#" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5" />
+                            </svg>
+                            Following
+                        </a>
+                    </nav>
+                    <button class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">Tweet</button>
+                </div>
+            </div>
+            <!-- Main Content -->
+            <div class="w-full md:w-1/2 border-x border-gray-200 dark:border-gray-800 p-4">
+                <div class="p-4 border-b border-gray-200 dark:border-gray-800">
+                    <h1 class="text-xl font-bold mb-4">Home</h1>
+                    @using (Html.BeginForm("Create", "Tweet", FormMethod.Post))
+                    {
+                        <div class="flex items-start space-x-4">
+                            <img src="@loggedInUser.Pic" alt="Pic" class="rounded-full w-10 h-10">
+
+                            <div class="flex-grow">
+                                <textarea name="Message" placeholder="What's happening?" class="w-full mb-2 resize-none p-2 border rounded-lg" rows="3"></textarea>
+                                <div class="flex justify-between items-center">
+                                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full">Tweet</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                </div>
+                @if (Model != null && Model.Any())
+                {
+                    <div>
+                        <!-- Loop through sampleTweets here -->
+                        @foreach (var tweet in Model)
+                        {
+                            <div class="p-4 border-b border-gray-200 dark:border-gray-800">
+                                <div class="flex space-x-4">
+                                    <img src="@tweet.User.Pic" alt="Picture" class="rounded-full w-10 h-10">
+                                    <div class="flex-grow">
+                                        <p class="font-bold">@tweet.User.Fullname <span class="font-normal text-gray-500"></span></p>
+                                        <p class="mt-1">@tweet.Message</p>
+                                        <div class="flex items-center space-x-6 mt-2">
+                                            <button class="flex items-center text-gray-500 hover:text-blue-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
+                                                    <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a10 10 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733q.086.18.138.363c.077.27.113.567.113.856s-.036.586-.113.856c-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.2 3.2 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.8 4.8 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
+                                                </svg>
+                                                3
+                                            </button>
+                                            <button class="flex items-center text-gray-500 hover:text-green-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-fill" viewBox="0 0 16 16">
+                                                    <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15" />
+                                                </svg>
+                                                5
+                                            </button>
+                                            <button class="flex items-center text-gray-500 hover:text-red-500">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reply-fill" viewBox="0 0 16 16">
+                                                    <path d="M5.921 11.9 1.353 8.62a.72.72 0 0 1 0-1.238L5.921 4.1A.716.716 0 0 1 7 4.719V6c1.5 0 6 0 7 8-2.5-4.5-7-4-7-4v1.281c0 .56-.606.898-1.079.62z" />
+                                                </svg>
+                                                8
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                }
+            </div>
+            <!-- Right Sidebar -->
+            <div class="w-full md:w-1/4 p-4 md:block">
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Trends for you</h3>
+                    <ul>
+                        <li class="mb-2">
+                            <a href="#" class="text-gray-900 hover:underline">#ReactJS</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-gray-900 hover:underline">#TwitterClone</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="#" class="text-gray-900 hover:underline">#TechNews</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using Twitter.Models;
 using TwitterClone.Services;
 
 namespace TwitterClone.Controllers
@@ -7,10 +8,12 @@ namespace TwitterClone.Controllers
     public class FollowingController : Controller
     {
         private readonly FollowService _followService;
+        private readonly UserService _userService;
 
         public FollowingController()
         {
             _followService = new FollowService();
+            _userService = new UserService();
         }
 
         // GET: Follow/Followers
@@ -68,7 +71,7 @@ namespace TwitterClone.Controllers
                 if (isFollowed)
                 {
                     ViewBag.Message = "Successfully followed!";
-                    return RedirectToAction("Following", new { userId = userId });
+                    return RedirectToAction("Dashboard", "User");
                 }
                 else
                 {
@@ -92,7 +95,7 @@ namespace TwitterClone.Controllers
                 if (isUnfollowed)
                 {
                     ViewBag.Message = "Successfully unfollowed!";
-                    return RedirectToAction("Following", new { userId = userId });
+                    return RedirectToAction("Dashboard","User");
                 }
                 else
                 {

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using TwitterClone.Entities;
 using TwitterClone.Repositories;
@@ -42,7 +44,6 @@ namespace TwitterClone.Controllers
         [HttpPut, Route("EditProfile")]
         public IHttpActionResult EditUser([FromBody] User user)
         {
-
             try
             {
                 rep.Edit(user);
@@ -53,14 +54,15 @@ namespace TwitterClone.Controllers
 
                 return BadRequest(ex.Message);
             }
+
         }
         [HttpGet, Route("Search/{username}")]
         public IHttpActionResult Search(string username)
         {
             try
             {
-                var getuser = rep.Get(username);
-                return Ok(getuser);
+                var getusers = rep.Get(username);
+                return Ok(getusers);
             }
             catch (Exception ex)
             {
@@ -80,6 +82,27 @@ namespace TwitterClone.Controllers
             {
 
                 return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost, Route("{userId}/UploadPicture")]
+        public IHttpActionResult UploadPicture(string userId)
+        {
+            var httprequest = HttpContext.Current.Request;
+            var file = httprequest.Files["profilePicture"];
+            try
+            {
+                if (file == null || file.ContentLength == 0)
+                {
+                    return BadRequest("No file uploaded.");
+                }
+
+                var path = rep.UploadPic(userId, file);
+                return Ok(path);
+            }
+            catch (Exception ex)
+            {
+
+                return InternalServerError(ex);
             }
         }
     }

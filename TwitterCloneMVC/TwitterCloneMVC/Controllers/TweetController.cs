@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using Twitter.Entities;
+using Twitter.Models;
 using TwitterClone.Services;
 
 namespace TwitterClone.Controllers
@@ -16,11 +16,17 @@ namespace TwitterClone.Controllers
         }
 
         // GET: Tweet/UserTweets
-        public ActionResult UserTweets(string userId)
+        public ActionResult UserTweets()
         {
             try
             {
-                var tweets = _tweetService.GetAllTweets(userId);
+                // Ensure that the user is logged in
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Login", "User"); // Redirect to login if not logged in
+                }
+                var user = (User)Session["User"];
+                var tweets = _tweetService.GetAllTweets(user.UserId);
                 if (tweets != null)
                 {
                     return View(tweets);
@@ -43,6 +49,12 @@ namespace TwitterClone.Controllers
         {
             try
             {
+                // Ensure that the user is logged in
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Login", "User"); // Redirect to login if not logged in
+                }
+
                 var tweets = _tweetService.GetUserFeed(userId);
                 if (tweets != null && tweets.Count > 0)
                 {
@@ -50,7 +62,7 @@ namespace TwitterClone.Controllers
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = "No feed found for this user.";
+                    ViewBag.ErrorMessage = $"No feed found for {userId}.";
                     return View("Error");
                 }
             }
@@ -64,6 +76,12 @@ namespace TwitterClone.Controllers
         // GET: Tweet/Create
         public ActionResult Create()
         {
+            // Ensure that the user is logged in before creating a tweet
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Login", "User"); // Redirect to login if not logged in
+            }
+
             return View();
         }
 
@@ -73,11 +91,21 @@ namespace TwitterClone.Controllers
         {
             try
             {
+                // Ensure that the user is logged in before creating a tweet
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Login", "User"); // Redirect to login if not logged in
+                }
+
+                // Get the logged-in user from the session
+                var loggedInUser = (User)Session["User"];
+                tweet.UserId = loggedInUser.UserId; // Assign logged-in user’s ID to the tweet
+
                 bool isCreated = _tweetService.CreateTweet(tweet);
                 if (isCreated)
                 {
                     ViewBag.Message = "Tweet posted successfully!";
-                    return RedirectToAction("UserTweets", new { userId = tweet.UserId });
+                    return RedirectToAction("Dashboard","User", new { userId = tweet.UserId });
                 }
                 else
                 {
@@ -95,9 +123,20 @@ namespace TwitterClone.Controllers
         // GET: Tweet/Edit
         public ActionResult Edit(int id)
         {
+            // Ensure that the user is logged in
+            if (Session["User"] == null)
+            {
+                return RedirectToAction("Login", "User"); // Redirect to login if not logged in
+            }
+
             // Fetch the tweet by ID (for editing purpose) from the service or database
-            // (You may need to add a method for fetching individual tweet in your TweetService)
-            var tweet = _tweetService.GetAllTweets("userId").OrderByDescending(x=>x.Created);  // Adjust logic accordingly
+            var tweet = _tweetService.GetTweet(id); // You may need to implement GetTweetById in TweetService
+            if (tweet == null)
+            {
+                ViewBag.ErrorMessage = "Tweet not found.";
+                return View("Error");
+            }
+
             return View(tweet);
         }
 
@@ -107,6 +146,20 @@ namespace TwitterClone.Controllers
         {
             try
             {
+                // Ensure that the user is logged in
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Login", "User"); // Redirect to login if not logged in
+                }
+
+                // Get the logged-in user from the session and ensure they are editing their own tweet
+                var loggedInUser = (User)Session["User"];
+                if (tweet.UserId != loggedInUser.UserId)
+                {
+                    ViewBag.ErrorMessage = "You can only edit your own tweets.";
+                    return View("Error");
+                }
+
                 bool isEdited = _tweetService.EditTweet(tweet);
                 if (isEdited)
                 {
@@ -132,6 +185,20 @@ namespace TwitterClone.Controllers
         {
             try
             {
+                // Ensure that the user is logged in
+                if (Session["User"] == null)
+                {
+                    return RedirectToAction("Login", "User"); // Redirect to login if not logged in
+                }
+
+                // Get the logged-in user from the session and ensure they are deleting their own tweet
+                var loggedInUser = (User)Session["User"];
+                if (userId != loggedInUser.UserId)
+                {
+                    ViewBag.ErrorMessage = "You can only delete your own tweets.";
+                    return View("Error");
+                }
+
                 bool isDeleted = _tweetService.DeleteTweet(id);
                 if (isDeleted)
                 {

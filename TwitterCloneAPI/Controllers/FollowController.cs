@@ -70,8 +70,8 @@ namespace TwitterClone.Controllers
         {
             try
             {
-                var followers = followrep.GetFollowers(userId).Count();
-                return Ok(followers);
+                var count = followrep.GetFollowersCount(userId);
+                return Ok(count);
             }
             catch (Exception ex)
             {
@@ -81,12 +81,12 @@ namespace TwitterClone.Controllers
         }
 
         [HttpGet, Route("FollowingCount/{userId}")]
-        public IHttpActionResult GetFollowingCount(string userId)
+        public IHttpActionResult GetFollowingUserCount(string userId)
         {
             try
             {
-                var following = followrep.GetFollowers(userId).Count();
-                return Ok(following);
+                var count = followrep.GetFollowingUsersCount(userId);
+                return Ok(count);
             }
             catch (Exception ex)
             {
@@ -95,10 +95,10 @@ namespace TwitterClone.Controllers
             }
         }
         [HttpGet, Route("{followingId}/isFollowing/{userId}")]
-        public IHttpActionResult IsFollowing(string userId,string followingId)
+        public IHttpActionResult IsFollowing(string userId, string followingId)
         {
-            var isfollowing = followrep.IsFollowing(userId,followingId);
-            return Ok(new { isfollowing });
+            var isfollowing = followrep.IsFollowing(userId, followingId);
+            return Ok(isfollowing);
         }
     }
 }

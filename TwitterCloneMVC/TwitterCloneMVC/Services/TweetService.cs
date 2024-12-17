@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
-using Twitter.Entities;
+using Twitter.Models;
 
 namespace TwitterClone.Services
 {
@@ -88,6 +88,25 @@ namespace TwitterClone.Services
                 return null;
             }
         }
+        public Tweet GetTweet(int tid)
+        {
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + "/GetTweetById/" + tid).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<Tweet>(responseData);
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         // Get Feed for User
         public List<Tweet> GetUserFeed(string userId)
@@ -100,6 +119,26 @@ namespace TwitterClone.Services
                 {
                     var responseData = response.Content.ReadAsStringAsync().Result;
                     return JsonConvert.DeserializeObject<List<Tweet>>(responseData);
+                }
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public int? GetTweetCount(string userId)
+        {
+            try
+            {
+                var response = _httpClient.GetAsync(apiBaseUrl + "/TweetCount" + userId).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseData = response.Content.ReadAsStringAsync().Result;
+                    return JsonConvert.DeserializeObject<int>(responseData);
                 }
 
                 return null;

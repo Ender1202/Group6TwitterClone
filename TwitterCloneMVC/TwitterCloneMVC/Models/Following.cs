@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace Twitter.Entities
+namespace Twitter.Models
 {
     public class Following
     {

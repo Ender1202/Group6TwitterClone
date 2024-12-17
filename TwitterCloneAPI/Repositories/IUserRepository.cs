@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using TwitterClone.Entities;
 
 namespace TwitterClone.Repositories
@@ -12,8 +13,9 @@ namespace TwitterClone.Repositories
         void Add(User user);
         void Edit(User user);
         void Delete(string id);
-        User Get(string username);
+        List<User> Get(string username);
         User GetById(string id);
         User Validate(string username, string password);
+        string UploadPic(string userId, HttpPostedFile profilePicture);
     }
 }

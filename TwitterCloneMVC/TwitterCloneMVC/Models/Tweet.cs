@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
-namespace Twitter.Entities
+namespace Twitter.Models
 {
     public class Tweet
     {

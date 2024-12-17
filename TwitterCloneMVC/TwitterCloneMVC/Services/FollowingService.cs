@@ -131,13 +131,13 @@ namespace TwitterClone.Services
         {
             try
             {
-                var response = _httpClient.GetAsync(apiBaseUrl + followingId + "/isFollowing/" + userId).Result;
+                var response = _httpClient.GetAsync(apiBaseUrl+userId+"/isFollowing/"+followingId).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
                     var responseData = response.Content.ReadAsStringAsync().Result;
-                    dynamic result = JsonConvert.DeserializeObject(responseData);
-                    return result.isfollowing;
+                    bool result = JsonConvert.DeserializeObject<bool>(responseData);
+                    return result;
                 }
 
                 return false;

@@ -13,5 +13,8 @@ namespace TwitterClone.Repositories
         void Delete(int tid);
         List<Tweet> GetAllTweets(string userId);
         List<Tweet> GetAllFeed(string userId);
+        int CountTweets(string userId);
+
+        Tweet GetTweet(int tid);
     }
 }

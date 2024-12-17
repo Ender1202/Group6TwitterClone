@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace Twitter.Entities
+namespace Twitter.Models
 {
     public class User
     {

@@ -1,0 +1,183 @@
+﻿@model Twitter.Models.User
+
+@{
+    Layout = null;
+    var loggedInUser = (Twitter.Models.User)Session["User"];
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.UserName's Profile - ThreadX</title>
+    <link rel="icon" href="https://abs.twimg.com/favicons/twitter.ico" type="image/png" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+</head>
+
+<div class="min-h-screen bg-gray-100">
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <img src="https://abs.twimg.com/favicons/twitter.ico" alt="Logo" width="32" height="32" />
+            </div>
+            @using (Html.BeginForm("Search", "User", FormMethod.Post))
+            {
+                <div class="flex-grow max-w-xl px-4">
+                    <input type="text"
+                           placeholder="Search ThreadX"
+                           class="w-full bg-gray-100 rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2" name="username" id="username" />
+                </div>
+            }
+            <div class="flex items-center">
+                <a href="/User/UserProfile" class="p-2 rounded-full hover:bg-gray-200"><strong>@loggedInUser.Fullname </strong></a>
+                <img src="@loggedInUser.Pic" alt="Profile" class="profile-picture" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;" />
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8 flex">
+        <!-- Left Sidebar -->
+        <nav class="w-64 pr-4 hidden md:block">
+            <ul class="space-y-2">
+                <li><a href="/User/Dashboard" class="flex items-center p-2 rounded-full hover:bg-gray-200">Home</a></li>
+                <li><a href="/Tweet/UserTweets" class="flex items-center p-2 rounded-full hover:bg-gray-200">My Tweets</a></li>
+                <li><a href="/User/UserProfile" class="flex items-center p-2 rounded-full hover:bg-gray-200">Profile</a></li>
+            </ul>
+        </nav>
+
+        <!-- Profile Content -->
+        <main class="flex-grow max-w-2xl">
+            <div class="bg-white rounded-lg shadow p-4 relative">
+                <!-- Profile Header -->
+                <div class="relative mb-4">
+                    <div class="bg-gray-200 h-48 w-full rounded-t-lg">
+                        <!-- Cover Photo -->
+                        <img src="C:\Users\namaaror\Desktop\Sprint\TwitterCloneMVC\TwitterCloneMVC\Designer.png" alt="Cover" class="h-full w-full object-cover rounded-t-lg" />
+                    </div>
+                    <a href="/User/EditProfile" class="absolute top-5 right-5 p-2 bg-gray-200 rounded-full hover:bg-gray-300 transition">
+                        <i class="fas fa-pencil-alt text-lg" title="Edit Profile"></i>
+                    </a>
+                    <div class="absolute bottom-0 left-4">
+                        <img src="@Model.Pic" alt="Profile" class="w-32 h-32 rounded-full border-4 border-white" />
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mt-16">
+                    <!-- Left: User's Name -->
+                    <div>
+                        <h1 class="text-2xl font-semibold">@Model.Fullname</h1>
+                    </div>
+                    <!-- Right: Email and Joining Date -->
+                    <div class="text-right">
+                        <p class="text-sm text-gray-600">Joined: @Model.JoiningDate</p>
+                    </div>
+                </div>
+                <!-- Profile Details -->
+                <div class="profile-details mt-5 bg-white p-4 rounded-lg shadow-md">
+                    <!-- Username -->
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="w-1/3">
+                            <label for="UserName" class="font-semibold text-gray-700">Username</label>
+                        </div>
+                        <div class="w-2/3">
+                            <p>@Model.UserName</p>
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="w-1/3">
+                            <label for="Bio" class="font-semibold text-gray-700">Bio</label>
+                        </div>
+                        <div class="w-2/3">
+                            <p>@Model.Bio</p>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="w-1/3">
+                            <label for="Email" class="font-semibold text-gray-700">Email</label>
+                        </div>
+                        <div class="w-2/3">
+                            <p>@Model.Email</p>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="mt-6 space-y-4">
+                        <div class="flex justify-between">
+                            <div class="flex flex-col items-center">
+                                <span class="text-lg font-bold">@Model.Tweets</span>
+                                <span class="text-gray-500">Tweets</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <span class="text-lg font-bold">@Model.Followers</span>
+                                <span class="text-gray-500">Followers</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <span class="text-lg font-bold">@Model.Following</span>
+                                <span class="text-gray-500">Following</span>
+                            </div>
+                        </div>
+                    </div>*@
+
+                <!-- Navigation Tabs -->
+                <div class="tabs mt-5">
+                    <ul class="nav nav-tabs flex space-x-4 mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-blue-600" href="#tweets" data-toggle="tab">Tweets</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-blue-600" href="#media" data-toggle="tab">Media</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-blue-600" href="#likes" data-toggle="tab">Likes</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-4">
+                        <div id="tweets" class="tab-pane fade show active">
+                            <h4>Tweets</h4>
+                            @* Tweets content goes here *@
+                        </div>
+                        <div id="media" class="tab-pane fade">
+                            <h4>Media</h4>
+                            @* Media content goes here *@
+                        </div>
+                        <div id="likes" class="tab-pane fade">
+                            <h4>Likes</h4>
+                            @* Liked tweets go here *@
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logout and Delete Account Buttons -->
+                <div class="mt-6">
+                    <form method="post" action="@Url.Action("Logout")">
+                        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">Logout</button>
+                    </form>
+
+                    <form method="post" action="@Url.Action("DeleteAccount")" class="mt-4">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600">Delete Account</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="w-64 pl-4 hidden md:block">
+            <div class="bg-white rounded-lg shadow p-4">
+                <h2 class="text-xl font-bold mb-4">Popular Users</h2>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:underline">Trending Topic 1</a></li>
+                    <li><a href="#" class="hover:underline">Trending Topic 2</a></li>
+                    <li><a href="#" class="hover:underline">Trending Topic 3</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+</div>

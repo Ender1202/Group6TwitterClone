@@ -20,7 +20,12 @@ namespace TwitterClone.Services
             if (!IsFollowing(userId, followingId))
             {
                 Random random = new Random();
-                var follower = new Following {Id = random.Next(1000,9999), FollowingId = followingId, UserId = userId };
+                var follower = new Following
+                {
+                    Id = random.Next(1000, 9999),
+                    FollowingId = followingId,
+                    UserId = userId
+                };
                 context.Followings.Add(follower);
                 context.SaveChanges();
             }
@@ -42,10 +47,20 @@ namespace TwitterClone.Services
             return followers;
         }
 
+        public int GetFollowersCount(string userId)
+        {
+            return GetFollowers(userId).Count();
+        }
+
         public List<User> GetFollowingUsers(string followingId)
         {
             var followingUsers = context.Followings.Where(x => x.FollowingId == followingId).Select(x => x.User).ToList();
             return followingUsers;
+        }
+
+        public int GetFollowingUsersCount(string userId)
+        {
+            return GetFollowingUsers(userId).Count();
         }
 
         public bool IsFollowing(string userId, string followingId)
