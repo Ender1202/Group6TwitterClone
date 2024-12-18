@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using TwitterClone.DataAccess;
@@ -41,9 +42,9 @@ namespace TwitterClone.Services
             }
         }
 
-        public List<User> GetFollowers(string userId)
+        public List<Following> GetFollowers(string userId)
         {
-            var followers = context.Followings.Where(x => x.UserId == userId).Select(x => x.Follower).ToList();
+            var followers = context.Followings.Where(x => x.UserId == userId).Include(x => x.Follower).ToList();
             return followers;
         }
 
@@ -52,9 +53,9 @@ namespace TwitterClone.Services
             return GetFollowers(userId).Count();
         }
 
-        public List<User> GetFollowingUsers(string followingId)
+        public List<Following> GetFollowingUsers(string followingId)
         {
-            var followingUsers = context.Followings.Where(x => x.FollowingId == followingId).Select(x => x.User).ToList();
+            var followingUsers = context.Followings.Where(x => x.FollowingId == followingId).Include(x=>x.User).ToList();
             return followingUsers;
         }
 

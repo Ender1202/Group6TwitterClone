@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Twitter.Models;
 
 namespace TwitterClone.Services
 {
@@ -43,7 +44,7 @@ namespace TwitterClone.Services
         }
 
         // Get Followers
-        public List<string> GetFollowers(string userId)
+        public List<Following> GetFollowers(string userId)
         {
             try
             {
@@ -52,19 +53,19 @@ namespace TwitterClone.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var responseData = response.Content.ReadAsStringAsync().Result;
-                    return JsonConvert.DeserializeObject<List<string>>(responseData);
+                    return JsonConvert.DeserializeObject<List<Following>>(responseData);
                 }
 
-                return new List<string>();
+                return null;
             }
             catch
             {
-                return new List<string>();
+                return null;
             }
         }
 
         // Get Following Users
-        public List<string> GetFollowingUsers(string userId)
+        public List<Following> GetFollowingUsers(string userId)
         {
             try
             {
@@ -73,14 +74,15 @@ namespace TwitterClone.Services
                 if (response.IsSuccessStatusCode)
                 {
                     var responseData = response.Content.ReadAsStringAsync().Result;
-                    return JsonConvert.DeserializeObject<List<string>>(responseData);
+                    var list = JsonConvert.DeserializeObject<List<Following>>(responseData);
+                    return list;
                 }
 
-                return new List<string>();
+                return null;
             }
             catch
             {
-                return new List<string>();
+                return null;
             }
         }
 

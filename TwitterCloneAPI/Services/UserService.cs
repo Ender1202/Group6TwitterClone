@@ -59,7 +59,7 @@ namespace TwitterClone.Services
         public List<User> Get(string username)
         {
             var users = context.Users
-                           .Where(u => u.UserName.Contains(username)) // Partial match
+                           .Where(u => u.UserName.Contains(username))
                            .ToList();
             return users;
         }

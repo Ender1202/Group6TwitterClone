@@ -35,7 +35,11 @@ namespace Twitter.Models
 
         [StringLength(500, ErrorMessage = "Bio can't be longer than 500 characters.")]
         public string Bio { get; set; }
-        public string Pic { get; set; }
+        public string Pic
+        {
+            get;
+            set;
+        }
 
         [DisplayName("Full Name")]
         [Required(ErrorMessage = "Full name is required.")]

@@ -10,9 +10,9 @@ namespace TwitterClone.Repositories
     internal interface IFollowing
     {
         void Add(string userId, string followingId);
-        List<User> GetFollowers(string userId);
+        List<Following> GetFollowers(string userId);
         int GetFollowersCount(string userId);
-        List<User> GetFollowingUsers(string followingId);
+        List<Following> GetFollowingUsers(string followingId);
         int GetFollowingUsersCount(string userId);
         void Delete(string userId, string followingId);
         bool IsFollowing(string userId,string followingId);

@@ -28,7 +28,7 @@ namespace TwitterClone.Controllers
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = "No followers found.";
+                    ViewBag.Message = "No followers found.";
                     return View("Error");
                 }
             }
@@ -40,7 +40,7 @@ namespace TwitterClone.Controllers
         }
 
         // GET: Follow/Following
-        public ActionResult Following(string userId)
+        public ActionResult FollowingUsers(string userId)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace TwitterClone.Controllers
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = "No following found.";
+                    ViewBag.Message = "Not Following Anyone.";
                     return View("Error");
                 }
             }

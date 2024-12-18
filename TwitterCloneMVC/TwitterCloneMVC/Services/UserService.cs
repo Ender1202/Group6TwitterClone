@@ -4,8 +4,11 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Reflection;
 using System.Text;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using Twitter.Models;
 
@@ -51,7 +54,7 @@ namespace TwitterClone.Services
         {
             try
             {
-                var response = _httpClient.DeleteAsync(apiBaseUrl + "Delete/" + userId).Result;
+                var response = _httpClient.DeleteAsync(apiBaseUrl + "Delete/"+userId).Result;
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -130,40 +133,6 @@ namespace TwitterClone.Services
             }
         }
 
-
-        public string UploadPic(HttpPostedFile file)
-        {
-            if (file == null || file.ContentLength == 0)
-            {
-                throw new Exception("No file uploaded.");
-            }
-
-            var extensions = new string[] { ".jpeg", ".jpg", ".png", ".gif" };
-            var fileExtension = Path.GetExtension(file.FileName).ToLower();
-
-            if (!Array.Exists(extensions, x => x == fileExtension))
-            {
-                throw new Exception("Invalid File Type Uploaded.");
-            }
-
-            if (file.ContentLength > 4 * 1024 * 1024)
-            {
-                throw new Exception("Size Exceeded.");
-            }
-            var uploadDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Uploads");
-            var FileName = Guid.NewGuid().ToString() + fileExtension;
-            var filePath = Path.Combine(uploadDirectory, FileName);
-            var directory = Path.GetDirectoryName(filePath);
-
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-            file.SaveAs(filePath);
-
-            return "Assets/" + "Uploads/" + FileName;
-        }
-
         // Method to send an email
         public bool SendEmail(string recipientEmail, string subject, string body)
         {
@@ -175,7 +144,7 @@ namespace TwitterClone.Services
                 string senderPassword = "SprintDmn@006"; // or App Password
 
                 // Create the email message
-                MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
+                
 
                 // Configure the SMTP client
                 SmtpClient smtpClient = new SmtpClient(smtpServer)
@@ -184,7 +153,7 @@ namespace TwitterClone.Services
                     Credentials = new NetworkCredential(senderEmail, senderPassword),
                     EnableSsl = true
                 };
-
+                MailMessage mailMessage = new MailMessage(senderEmail, recipientEmail, subject, body);
                 // Send the email
                 smtpClient.Send(mailMessage);
 

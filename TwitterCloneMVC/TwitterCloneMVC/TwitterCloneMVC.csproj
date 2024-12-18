@@ -183,6 +183,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\FileUpload.cs" />
     <Compile Include="Models\Following.cs" />
     <Compile Include="Models\Tweet.cs" />
     <Compile Include="Models\User.cs" />
@@ -251,10 +252,14 @@
     <Content Include="Views\User\Search.cshtml" />
     <Content Include="Views\Tweet\Edit.cshtml" />
     <Content Include="Views\User\EditProfile.cshtml" />
+    <Content Include="Views\User\ViewProfile.cshtml" />
+    <Content Include="Views\Following\Followers.cshtml" />
+    <Content Include="Views\Following\FollowingUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Following\" />
+    <Folder Include="Assets\CoverImage\" />
+    <Folder Include="Assets\Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

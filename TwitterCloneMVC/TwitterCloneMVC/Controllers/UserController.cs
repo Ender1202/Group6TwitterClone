@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Twitter.Models;
@@ -91,24 +92,25 @@ namespace TwitterClone.Controllers
             {
                 var loginUser = (User)Session["User"];
                 var users = _userService.SearchUser(username);
+                var mod = users.Where(x => x.UserId != loginUser.UserId).ToList();
 
-                if (users != null && users.Count > 0)
+                if (mod != null && mod.Count > 0)
                 {
                     List<UserDTO> usersList = new List<UserDTO>();
                     foreach (var user in users)
                     {
-                        if (user == loginUser)
-                        {
-                            ViewBag.NotFound = "You are looking for yourself in the wrong place!";
-                            return View();
-                        }
+                        //if (user.UserId == loginUser.UserId)
+                        //{
+                        //    ViewBag.ErrorMessage = "You are looking for yourself in the wrong place!";
+                        //    return View("Error");
+                        //}
                         bool IsFollowing = _followService.IsFollowing(loginUser.UserId, user.UserId);
                         usersList.Add(new UserDTO()
                         {
                             Fullname = user.Fullname,
                             UserName = user.UserName,
-                            Pic=user.Pic,
-                            IsFollowing= IsFollowing,
+                            Pic = user.Pic,
+                            IsFollowing = IsFollowing,
                             UserId = user.UserId
                         });
 
@@ -117,8 +119,8 @@ namespace TwitterClone.Controllers
                 }
                 else
                 {
-                    ViewBag.NotFound = "User Not Found!";
-                    return View();
+                    ViewBag.ErrorMessage = "User Not Found!";
+                    return View("Error");
                 }
             }
             catch (Exception ex)
@@ -224,16 +226,38 @@ namespace TwitterClone.Controllers
             }
         }
 
+        public ActionResult ProfilePic(HttpPostedFileBase file)
+        {
+            try
+            {
+                UserController userController = new UserController();
+
+                string picUrl = userController.UploadPic(file);
+                Session["Pic"] = picUrl;
+                return RedirectToAction("EditProfile","User");
+            }
+            catch (Exception)
+            {
+
+                return View("Error");
+            }
+            
+        }
+
         // POST: User/Edit
         [HttpPost]
-        public ActionResult Edit(User user, HttpPostedFile file)
+        public ActionResult Edit(User user)
         {
-            if (ModelState.IsValid)
-            {
-                user.Pic = _userService.UploadPic(file);
 
-                try
+            try
+            {
+                if (ModelState.IsValid)
                 {
+                    var picUrl = (string)Session["Pic"];
+                    if(picUrl != null)
+                    {
+                        user.Pic = picUrl;
+                    }
                     bool isEdited = _userService.EditUser(user);
                     if (isEdited)
                     {
@@ -247,13 +271,29 @@ namespace TwitterClone.Controllers
                         return View("Error");
                     }
                 }
-                catch (Exception ex)
+                ViewBag.ErrorMessage = "All fields should be filled before Saving the Changes.";
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View("Error");
+            }
+
+        }
+
+        public ActionResult ViewProfile(string username)
+        {
+            var users = _userService.SearchUser(username);
+            var viewuser = new User();
+            foreach (var user in users)
+            {
+                if (user.UserName == username)
                 {
-                    ViewBag.ErrorMessage = ex.Message;
-                    return View("Error");
+                    viewuser = user;
                 }
             }
-            return View("EditProfile");
+            return View(viewuser);
         }
 
         // Logout Action to clear session when user logs out
@@ -261,7 +301,42 @@ namespace TwitterClone.Controllers
         {
             // Clear session data when logging out
             Session.Clear();
-            return RedirectToAction("Login"); // Redirect to login page after logout
+            return RedirectToAction("Login");
+        }
+
+        private string UploadPic(HttpPostedFileBase file)
+        {
+            PicUpload model = new PicUpload();
+            //var extensions = new string[] { ".jpeg", ".jpg", ".png", ".gif" };
+            //var fileExtension = Path.GetExtension(file.FileName).ToLower();
+
+            //if (!Array.Exists(extensions, x => x == fileExtension))
+            //{
+            //    throw new Exception("Invalid File Type Uploaded.");
+            //}
+            if (file.ContentLength > 4 * 1024 * 1024)
+            {
+                throw new Exception("Size Exceeded.");
+            }
+
+            if (file != null)
+            {
+                var Extension = Path.GetExtension(file.FileName);
+                var fileName = "my-file-" + DateTime.Now.ToString("yyyyMMddHHmmssfff") + Extension;
+                string path = Path.Combine(Server.MapPath("~/Assets/Uploads"), fileName);
+                
+                model.FileUrl = Url.Content(Path.Combine("~/Assets/Uploads/", fileName));
+                model.FileName = fileName;
+
+                file.SaveAs(path);
+                return path;
+            }
+
+            throw new Exception("No file uploaded.");
+
+
+            
         }
     }
+
 }

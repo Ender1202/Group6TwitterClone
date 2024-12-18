@@ -9,27 +9,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ThreadX</title>
-    @*<link href="https://fonts.googleapis.com/css2?family=Arial:wght@700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Arial', sans-serif; /* Simple and clean font */
-            background-color: #f1f1f1; /* Light gray background */
-            text-align: center; /* Center the text */
-            margin: 0;
-            padding: 0;
+        /* Custom styling for Thread X */
+        .header-title {
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            font-size: 30px;
+            color: #1DA1F2; /* Twitter's blue color */
+            letter-spacing: -0.5px;
+            text-align: left;
+            margin-top: 20px;
         }
-
-        .thread-header {
-            font-size: 20px; /* Large size for the header */
-            font-weight: bold; /* Bold for emphasis */
-            color: #333; /* Dark text for contrast */
-            margin-top: 50px; /* Space from the top */
-        }
-
-            .thread-header span {
-                color: #007bff; /* Blue color for the X */
-            }
-    </style>*@
+    </style>
     <link rel="icon" href=https://abs.twimg.com/favicons/twitter.ico type="image/png" />
     <link href=https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css rel="stylesheet" />
     <script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js></script>
@@ -41,16 +32,16 @@
         <header class="bg-white shadow-sm">
             <div class="container mx-auto px-4 py-3 flex items-center justify-between">
                 @*<div class="flex items-center">
-            <img src=https://abs.twimg.com/favicons/twitter.ico alt="Logo" width="32" height="32" />
-        </div>*@
+                        <img src=https://abs.twimg.com/favicons/twitter.ico alt="Logo" width="32" height="32" />
+                    </div>*@
                 <div class="mb-4">
                     <svg viewBox="0 0 24 24" class="h-8 w-8 text-blue-400" fill="currentColor">
                         <g><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"></path></g>
                     </svg>
                 </div>
-                @*<div class="thread-header">
-                    Thread<span>X</span>
-                </div>*@
+                <div class="header-title">
+                    Thread<span style="color: #007bff;">X</span>
+                </div>
                 @using (Html.BeginForm("Search", "User", FormMethod.Post))
                 {
                     <div class="flex-grow max-w-xl px-4">
@@ -70,11 +61,6 @@
             <!-- Left Sidebar -->
             <div class="w-full md:w-1/4 p-4 md:block">
                 <div class="md:fixed">
-                    @*<div class="mb-4">
-                            <svg viewBox="0 0 24 24" class="h-8 w-8 text-blue-400" fill="currentColor">
-                                <g><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"></path></g>
-                            </svg>
-                        </div>*@
                     <nav class="flex flex-row md:flex-col justify-around md:justify-start">
                         <a href="/User/Dashboard" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill" viewBox="0 0 16 16">
@@ -104,14 +90,14 @@
                             Notifications
                         </a>
 
-                        <a href="#" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
+                        <a href="/Following/Followers?userId=@loggedInUser.UserId" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-heart" viewBox="0 0 16 16">
                                 <path d="M9 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h10s1 0 1-1-1-4-6-4-6 3-6 4m13.5-8.09c1.387-1.425 4.855 1.07 0 4.277-4.854-3.207-1.387-5.702 0-4.276Z" />
                             </svg>
                             Followers
                         </a>
 
-                        <a href="#" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
+                        <a href="/Following/FollowingUsers?userId=@loggedInUser.UserId" class="w-full flex items-center text-lg mb-2 justify-start text-gray-900 hover:bg-gray-200 p-2 rounded-lg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
                                 <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
                                 <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5" />
@@ -119,7 +105,7 @@
                             Following
                         </a>
                     </nav>
-                    <button class="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">Tweet</button>
+                   
                 </div>
             </div>
             <!-- Main Content -->
@@ -172,6 +158,7 @@
                                                 </svg>
                                                 8
                                             </button>
+                                            <p class="justify-content-sm-around text-sm">@tweet.Created.ToString("g")</p>
                                         </div>
                                     </div>
                                 </div>
@@ -183,22 +170,29 @@
             </div>
             <!-- Right Sidebar -->
             <div class="w-full md:w-1/4 p-4 md:block">
-                <div class="bg-white p-4 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-semibold mb-4">Trends for you</h3>
-                    <ul>
-                        <li class="mb-2">
-                            <a href="#" class="text-gray-900 hover:underline">#ReactJS</a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-gray-900 hover:underline">#TwitterClone</a>
-                        </li>
-                        <li class="mb-2">
-                            <a href="#" class="text-gray-900 hover:underline">#TechNews</a>
-                        </li>
-                    </ul>
+                <div class="md-fixed">
+                    <div class="bg-white p-4 rounded-lg shadow-lg">
+                        <h3 class="text-xl font-semibold mb-4">Trends for you</h3>
+                        <ul>
+                            <li class="mb-2">
+                                <a href="#" class="text-gray-900 hover:underline">#ReactJS</a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="#" class="text-gray-900 hover:underline">#TwitterClone</a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="#" class="text-gray-900 hover:underline">#TechNews</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        setTimeout(function () {
+            location.reload(); // Refreshes the page
+        }, 10000); // 30000 milliseconds = 30 seconds
+    </script>
 </body>
 </html>

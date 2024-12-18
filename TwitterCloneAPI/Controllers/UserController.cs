@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web;
@@ -32,7 +31,7 @@ namespace TwitterClone.Controllers
             try
             {
                 rep.Delete(id);
-                return Ok("Deleted");
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -47,7 +46,7 @@ namespace TwitterClone.Controllers
             try
             {
                 rep.Edit(user);
-                return Ok("Edited " + user);
+                return Ok(user);
             }
             catch (Exception ex)
             {
