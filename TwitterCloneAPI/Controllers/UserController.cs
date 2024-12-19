@@ -25,12 +25,12 @@ namespace TwitterClone.Controllers
             rep.Add(user);
             return Ok("Added" + user.UserName);
         }
-        [HttpDelete, Route("Delete/{id}")]
-        public IHttpActionResult DeleteUser(string id)
+        [HttpDelete, Route("Delete/{userId}")]
+        public IHttpActionResult DeleteUser(string userId)
         {
             try
             {
-                rep.Delete(id);
+                rep.Delete(userId);
                 return Ok();
             }
             catch (Exception ex)
@@ -83,26 +83,28 @@ namespace TwitterClone.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost, Route("{userId}/UploadPicture")]
-        public IHttpActionResult UploadPicture(string userId)
-        {
-            var httprequest = HttpContext.Current.Request;
-            var file = httprequest.Files["profilePicture"];
-            try
-            {
-                if (file == null || file.ContentLength == 0)
-                {
-                    return BadRequest("No file uploaded.");
-                }
 
-                var path = rep.UploadPic(userId, file);
-                return Ok(path);
-            }
-            catch (Exception ex)
-            {
 
-                return InternalServerError(ex);
-            }
-        }
+        //[HttpPost, Route("{userId}/UploadPicture")]
+        //public IHttpActionResult UploadPicture(string userId)
+        //{
+        //    var httprequest = HttpContext.Current.Request;
+        //    var file = httprequest.Files["profilePicture"];
+        //    try
+        //    {
+        //        if (file == null || file.ContentLength == 0)
+        //        {
+        //            return BadRequest("No file uploaded.");
+        //        }
+
+        //        var path = rep.UploadPic(userId, file);
+        //        return Ok(path);
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return InternalServerError(ex);
+        //    }
+        //}
     }
 }

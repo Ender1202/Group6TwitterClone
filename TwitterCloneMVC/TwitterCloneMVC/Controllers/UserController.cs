@@ -176,7 +176,7 @@ namespace TwitterClone.Controllers
                 if (isDeleted)
                 {
                     ViewBag.Message = "User deleted successfully!";
-                    return RedirectToAction("Index", "Home"); // Redirect after deletion
+                    return RedirectToAction("Login", "User"); // Redirect after deletion
                 }
                 else
                 {

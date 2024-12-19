@@ -110,14 +110,14 @@
                             <input type="hidden" id="UserName" name="UserName" value="@Model.UserName" class="form-control" />
                             <input type="hidden" id="UserId" name="UserId" value="@Model.UserId" class="form-control" />
                             <input type="hidden" id="JoiningDate" name="JoiningDate" value="@Model.JoiningDate" class="form-control" />
-                            @*<input type="hidden" id="Pic" name="Pic" value="@Model.Pic" class="form-control" />*@
+                            <input type="hidden" id="Pic" name="Pic" value="https://img.freepik.com/premium-photo/office-worker-professional-profile-design-with-male-female_1252102-19820.jpg" class="form-control" />
                         </div>
                         @*Profile Picture*@
-                        <form method="post" enctype="multipart/form-data" action="/User/ProfilePic">
+                        @*<form method="post" enctype="multipart/form-data" action="/User/ProfilePic">
                             <label for="pic" class="block text-sm font-semibold text-gray-700">Upload Profile Picture</label>
                             <input type="file" id="file" name="file" accept="image/*" class="mt-2 block w-full text-sm text-gray-700 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                             <button type="submit" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600">Upload</button>
-                        </form>
+                        </form>*@
 
                         <!-- Email -->
                         <div class="form-group">

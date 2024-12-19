@@ -17,7 +17,7 @@ namespace Twitter.Models
         public string UserId { get; set; }
 
         [Required(ErrorMessage = "Message cannot be empty.")]
-        [StringLength(100, ErrorMessage = "Tweet message cannot exceed 100 characters.")]
+        [StringLength(100,MinimumLength =5, ErrorMessage = "Tweet must be between 5 and 100 characters.")]
         public string Message { get; set; }
 
         [DisplayName("Posted on")]

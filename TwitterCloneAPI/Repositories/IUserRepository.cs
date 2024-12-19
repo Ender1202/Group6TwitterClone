@@ -16,6 +16,6 @@ namespace TwitterClone.Repositories
         List<User> Get(string username);
         User GetById(string id);
         User Validate(string username, string password);
-        string UploadPic(string userId, HttpPostedFile profilePicture);
+        //string UploadPic(string userId, HttpPostedFile profilePicture);
     }
 }

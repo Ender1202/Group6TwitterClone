@@ -26,11 +26,11 @@ namespace Twitter.Models
         public string Mobile { get; set; }
 
         [Required(ErrorMessage = "Password is required.")]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters.")]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "Password must be between 6 and 20 characters.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Confirm Password is required.")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; }
 
         [StringLength(500, ErrorMessage = "Bio can't be longer than 500 characters.")]

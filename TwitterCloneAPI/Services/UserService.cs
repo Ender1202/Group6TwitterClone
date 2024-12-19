@@ -27,9 +27,9 @@ namespace TwitterClone.Services
             }
         }
 
-        public void Delete(string id)
+        public void Delete(string userId)
         {
-            var user = context.Users.FirstOrDefault(x => x.UserId == id);
+            var user = context.Users.SingleOrDefault(x => x.UserId == userId);
 
             if (user != null)
             {
@@ -69,47 +69,47 @@ namespace TwitterClone.Services
             return context.Users.FirstOrDefault(x => x.UserId == id);
         }
 
-        public string UploadPic(string userId, HttpPostedFile profilePicture)
-        {
-            if (profilePicture == null || profilePicture.ContentLength == 0)
-            {
-                throw new Exception("No file uploaded.");
-            }
+        //public string UploadPic(string userId, HttpPostedFile profilePicture)
+        //{
+        //    if (profilePicture == null || profilePicture.ContentLength == 0)
+        //    {
+        //        throw new Exception("No file uploaded.");
+        //    }
 
-            var extensions = new string[] { ".jpeg", ".jpg", ".png", ".gif" };
-            var fileExtension = Path.GetExtension(profilePicture.FileName).ToLower();
+        //    var extensions = new string[] { ".jpeg", ".jpg", ".png", ".gif" };
+        //    var fileExtension = Path.GetExtension(profilePicture.FileName).ToLower();
 
-            if (!Array.Exists(extensions, x => x == fileExtension))
-            {
-                throw new Exception("Invalid File Type Uploaded.");
-            }
+        //    if (!Array.Exists(extensions, x => x == fileExtension))
+        //    {
+        //        throw new Exception("Invalid File Type Uploaded.");
+        //    }
 
-            if (profilePicture.ContentLength > 4 * 1024 * 1024)
-            {
-                throw new Exception("Size Exceeded.");
-            }
-            var uploadDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Uploads");
-            var FileName = Guid.NewGuid().ToString() + fileExtension;
-            var filePath = Path.Combine(uploadDirectory, FileName);
-            var directory = Path.GetDirectoryName(filePath);
+        //    if (profilePicture.ContentLength > 4 * 1024 * 1024)
+        //    {
+        //        throw new Exception("Size Exceeded.");
+        //    }
+        //    var uploadDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Uploads");
+        //    var FileName = Guid.NewGuid().ToString() + fileExtension;
+        //    var filePath = Path.Combine(uploadDirectory, FileName);
+        //    var directory = Path.GetDirectoryName(filePath);
 
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
+        //    if (!Directory.Exists(directory))
+        //    {
+        //        Directory.CreateDirectory(directory);
+        //    }
 
-            profilePicture.SaveAs(filePath);
+        //    profilePicture.SaveAs(filePath);
 
-            var user = context.Users.Find(userId);
-            if (user == null)
-            {
-                throw new Exception("User Not Found.");
-            }
+        //    var user = context.Users.Find(userId);
+        //    if (user == null)
+        //    {
+        //        throw new Exception("User Not Found.");
+        //    }
 
-            user.Pic = "/Assets/Uploads/" + FileName;
-            context.SaveChanges();
-            return user.Pic;
-        }
+        //    user.Pic = "/Assets/Uploads/" + FileName;
+        //    context.SaveChanges();
+        //    return user.Pic;
+        //}
 
         public User Validate(string username, string password)
         {
